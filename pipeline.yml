@@ -1,0 +1,30 @@
+resources:
+- name: source
+  type: git
+  source:
+    uri: https://github.com/mateusprado/http_probe.git
+    branch: master
+
+- name: docker
+  type: docker-image
+  source:
+    repository: alpine
+
+jobs:
+  - name: test
+    plan:
+    - aggregate: 
+      - get: docker
+      - get: source
+
+    - task: show-files
+      config: 
+        platform: linux
+        run:
+          path: sh
+          args:
+          - |
+            ls -l
+        inputs:
+          - name: source  
+      image: docker
